@@ -1,0 +1,44 @@
+﻿Uppgift 2
+Användargränssnittet ni utgick från i del 3 var en ansats till implementation av Model-View-Controller Pattern, men där gränsdragningen mellan model, view, controller och applikation inte var något vidare genomtänkt (för att inte säga usel).
+
+
+* Vilka avvikelser från MVC-idealet kan ni identifiera i det ursprungliga användargränssnittet? Vad borde ha gjorts smartare, dummare eller tunnare?
+* Vilka av dessa brister åtgärdade ni med er nya design från del 3? Hur då? Vilka brister åtgärdade ni inte?
+* Rita ett nytt UML-diagram som beskriver en förbättrad design med avseende på MVC.
+
+
+
+
+Vilka avvikelser från MVC-idealet kan ni identifiera i det ursprungliga användargränssnittet? Vad borde ha gjorts smartare, dummare eller tunnare? Vilka av dessa brister åtgärdade ni med er nya design från del 3? Hur då? Vilka brister åtgärdade ni inte?
+* I det ursprungliga programmet så gjordes vissa beräkningar i CarView. Enligt MVC så ska inga beräkningar göras i en view, utan den ska vara dum. Detta har vi nu åtgärdat genom att lägga alla actionListeners i CarActions.
+* I den tidigare varianten så skapades bilar i CarController, som enligt princip enbart ska hantera input från användaren. Detta har vi åtgärdat genom att skapa en CarFactory. 
+* Tidigare så befann main-funktionen sig i CarController. Detta bryter mot C-principen som bara ska hantera extern input. Därav skapade vi en CarStart som startar programmet.
+
+
+
+
+
+
+
+
+Uppgift 3: Fler designmönster
+Observer, Factory Method, State, Composite. För vart och ett av dessa fyra designmönster, svara på följande frågor:
+   * Finns det något ställe i er design där ni redan använder detta pattern, avsiktligt eller oavsiktligt? Vilka designproblem löste ni genom att använda det?
+   * Finns det något ställe där ni kan förbättra er design genom att använda detta design pattern? Vilka designproblem skulle ni lösa genom att använda det? Om inte, varför skulle er design inte förbättras av att använda det?
+Uppdatera er design med de förbättringar ni identifierat.
+
+
+Observer: Lägg till ett pattern som i skickar notios om att den blivit uppdaterad till observer
+Används i CarController, där TimerListener är en observer som uppdaterar CarView när timern initieras i ActionListener. Ser till att viewn uppdateras regelbundet så bilarna kan röra på sig. Här ser observationer till att informationen regelbundet kan uppdateras på förändringar i objektens status. I tidigare kodversioner var CarView och CarController starkt kopplade (coupled), när detta nu inte längre är fallet behöver CarView inte veta vad som händer i controllern, utan är bara dependent. Alla dependent objects i observerande klass uppdateras automatiskt. 
+
+
+Factory Method: 
+I nuläget finns ingen factory method. Klassen CarCreator skulle den kunna haft en implementation där vi använder Factory design genom Creator-klassen och subklasser där vi/klienten inte behöver specificiera den exakta klassen av objektet som skapas, en fördel om vi vill separera skapandet med implementtaionen av ett objekt. Förändringen skulle innebära att vi på ett enklare sätt kan lägga till nya bilmodeller utan att behöva göra större kodförändringar, något vi planerar att göra.
+
+
+State: 
+State design förekommer inte utifrån vad vi kan tolka i vår nuvarande kod , men skulle kunna lösa problemet med att hantera objektens olika beroende på nuvarande status (state). Ett exempel på detta hade kunnat vara på turboOn/turboOff buttons för att bara ha en knapp som heter turboOnOff. Då ser vi alltid till att knappen antingen stänger av eller sätter på utifrån nuvarande status. En förändring där vi fokuserar på knapparnas användning ser vi inte kommer förbättra programmet, utan om något kanske bara skapa större förvirring eftersom man tex. inte ser när den är på eller av. 
+
+
+Composite:
+Composite design pattern likt en trädstruktur är inte något vi hittat förekomma i vår kod. Composite patterns är strukturer där individuella objekt och samlingar av objekt kan behandlas lika i en hierarkisk struktur, ett design pattern som kan vara värt att överväga om vi skulle vilja ha en sådan funktionalitet, exempelvis om varje Car skulle ha ett mer komplext mönster med fler underklasser i form av fler delar hade det varit användbart. Objekt i våra klasser har viss relation, men inget i koden kan liknas vid en hierarkisk eller trädliknande struktur. Eftersom vi inte har detta eller ser anledning att ändra koden för att bli mer avancerad kommer vi inte göra någon förändring.

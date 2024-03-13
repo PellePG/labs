@@ -1,0 +1,69 @@
+﻿Uppgift 2: 
+
+
+
+
+Vilka beroenden är nödvändiga?
+* Saab95, Volvo, Scania och Transporter måste extenda Car eftersom den ärver de flesta av sina attribut därifrån.
+* Med hur vi har valt att sätta upp klasserna där Workshop är en abstrakt klass till VolvoWorkshop, så krävs en connection mellan dessa två. 
+* CarController använder Car i alla sina metoder som gas, brake, turboOn, turboOff o.s.v.
+* Carview är beroende av JFrame då den används för att bygga upp vårt fönster med knappar, display, minimering av skärm o.s.v.
+* CarView och CarController är beroende av varandra eftersom knapparna från CarView och knappens “funktion” från CarController måste kopplas ihop.
+
+
+Vilka klasser är beroende av varandra som inte borde vara det?
+* CarController och CarView har onödigt många metoder som både har hög cohesion och koppling hade kunnat undvika beroenden sinsemellan. 
+
+
+Finns det starkare beroenden än nödvändigt?
+* Samma sak här, där både CarController och CarView har onödigt starka band till varandra. Övriga klasser, exempelvis Workshop och instanser av Car har just klassen har en abstraktion i klassen Car emellan sig. 
+
+
+Kan ni identifiera några brott mot övriga designprinciper vi pratat om i kursen?
+* Vi tror att man kan göra viss förbättring avseende modularitet i lastbilsklasserna, där vi från början valde att skapa alla lastbilar som instanser av car även om en del metoder förekommer dubbelt i Scania och Transporter. 
+* Open-closed principle i drawPanel och Carview, där det uppstår ett (egen förklaring) “cirkulärt beroende”, istället för att Carview bara är extensible men inte modifierbara. 
+
+
+
+
+Uppgift 3:
+
+
+Vilka ansvarsområden har era klasser?
+* Car - En övergripande abstrakt klass som sätter en “mall” för grundfunktioner till de olika fordonen.
+* CarController - Den utför alla metoder som kallas på i CarView för respektive fordon.
+* CarView - Målar upp vårt fönster med de olika fordonen och möjliggör för oss att “köra” fordonen. Kallar på metoder i CarController.
+* DrawPanel - Sköter bilderna så att de rör på sig när positionen uppdateras.
+* Moveable - Interface för att flytta bilar
+* Volvo240, Saab95, Scania, Transporter - Fordon som är instanser av Car, men har vissa egna attribut och metoder.
+* Workshop - En övergripande abstrakt klass som sätter en “mall” för grundfunktioner till de olika workshopsen (i vårt fall endast en VolvoWorkshop
+* VolvoWorkshop - En instans av Workshop som endast accepterar fordon av märket Volvo.
+
+
+Vilka anledningar har de att förändras?
+* CarController och CarView håller för närvarande väldigt många metoder, hade varit bättre att dela upp dessa på fler metoder. 
+
+
+På vilka klasser skulle ni behöva tillämpa dekomposition för att bättre följa SoC och SRP?
+* Med hänsyn till Single Responsibility Principle så kan CarViews alla ActionListeners flyttas till en separat klass som sköter all kommunikation till panelen.
+* Metoder som skapar bilar i CarController kan flyttas till en separat klass enligt principer för SoC, så skapande och metoder för förflyttning/actions inte sker i samma klass utan de modulariseras. 
+
+
+Uppgift 4: Ny design
+Rita ett UML-diagram över en ny design som åtgärdar de brister ni identifierat med avseende både på beroenden och ansvarsfördelning.
+
+
+Motivera, i termer av de principer vi gått igenom, varför era förbättringar verkligen är förbättringar.
+* Moduläriteten kan öka i CarController och CarView genom att bryta ut specifika delar, därmed skapa en mer lättredigerad och anpassningsbar kod. 
+* Separation av ansvarsområden i klasser skapar bättre separation of concern och single responsibility principle. 
+
+
+Skriv en refaktoriseringsplan. Planen bör bestå av en sekvens refaktoriseringssteg som tar er från det nuvarande programmet till ett som implementerar er nya design. Planen behöver inte vara enormt detaljerad. Se Övning 3: UML, static vs dynamic för ett exempel på en refaktoriseringsplan.
+
+
+* Bryta ner CarController och CarView till fler klasser för att öka cohesion 
+   * Skapa en ny klass CarCreator 
+   * Skapa en ny klass CarActions
+      * Bryt ut ActionListeners till egen klass
+Finns det några delar av planen som går att utföra parallellt, av olika utvecklare som arbetar oberoende av varandra? Om inte, finns det något sätt att omformulera planen så att en sådan arbetsdelning är möjlig?
+* Metoden för att skapa bilar behöver brytas ut innan övriga utbrytningar sker
